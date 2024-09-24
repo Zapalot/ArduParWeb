@@ -40,7 +40,7 @@ td, th {
     outputBuffer += "</body></html>";
 }
 
-void WebFormHtmlPage::reactToRequest(WebServer &server)
+void WebFormHtmlPage::reactToRequest(ArduParWebServerClass &server)
 {
     for (auto part : uiElements)
     {

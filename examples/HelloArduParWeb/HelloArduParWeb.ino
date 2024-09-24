@@ -1,4 +1,8 @@
-#include "ArduPar3.h"
+#include <Arduino.h>
+#include <Preferences.h>
+#include <ArduPar3.h>
+#include <ArduParWeb.h>
+
 //An example for a simple web based user interface using ArduPar3
 //Tested on ESP32 (will not work ATMega based Arduinos)
 
@@ -29,16 +33,22 @@ void saveFunction() {
 CallbackArduPar3 saveCallbackParameter;
 
 //////////////////////////Everything WiFi
-#include <esp_wifi.h>
+#ifdef ESP8266
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#endif
+
+#ifdef ESP32
 #include <WiFi.h>
+#include <WebServer.h>
+#endif
 
 void setupWifi(const char *ssid, const char *password);
 
 ///////////////////everything Web///
 #include <WiFiClient.h>
-#include <WebServer.h>
 
-WebServer server(80);
+ArduParWebServerClass server(80);
 void notFound();            // function to call on unknon URIs
 void serveArduParFormUi();  // function to serve our UI
 
@@ -59,8 +69,8 @@ void setup() {
 
   // initialize parameters and callbacks
   ArduPar3Collection::globalDefaultCollection = &parameterCollection;  // use our parameter collection as a default
-  someFloatParameter.setup(PSTR("/numbers/someFloat"), PSTR("An exquisite float"), 0, 10, &someFloat);
-  someInt32Parameter.setup(PSTR("/numbers/someInt"), PSTR("An exquisite integer"), 0, 10000, &someInt);
+  someFloatParameter.setup(PSTR("/numbers/someFloat"), PSTR("An exquisite float"), 0, 10,5, &someFloat);
+  someInt32Parameter.setup(PSTR("/numbers/someInt"), PSTR("An exquisite integer"), 0, 10000, 500,&someInt);
   dumpCallbackParameter.setup(PSTR("/commands/dump"), PSTR("Print Parameter Summary"), &dumpFunction);
   loadCallbackParameter.setup(PSTR("/commands/load"), PSTR("Load Settings."), &loadFunction);
   saveCallbackParameter.setup(PSTR("/commands/save"), PSTR("Save Settings."), &saveFunction);
@@ -87,7 +97,8 @@ void loop() {
   delay(2);                                                       //allow the cpu to switch to other tasks
 }
 
-void setupWifi(const char *ssid, const char *password) {
+void setupWifi(const char *ssid, const char *password)
+{
 
   Serial.print("Connecting to wifi network \"");
   Serial.print(ssid);
@@ -97,22 +108,26 @@ void setupWifi(const char *ssid, const char *password) {
 
   long start = millis();
   // try for ten seconds to connect every 500 ms (i.e. make 10000/500 = 20 attempts)
-  while (WiFi.status() != WL_CONNECTED && millis() - start < 4000) {
+  while (WiFi.status() != WL_CONNECTED && millis() - start < 10000)
+  {
     Serial.print(".");
     delay(500);
   }
 
   // print result of connection attempt(s) on serial console
-  if (WiFi.status() != WL_CONNECTED) {
+  if (WiFi.status() != WL_CONNECTED)
+  {
     Serial.print(" failed with status ");
     Serial.println(WiFi.status());
-  } else {
+  }
+  else
+  {
     Serial.println(" succeeded");
     Serial.print("local IP address is ");
     Serial.println(WiFi.localIP());
-    esp_wifi_set_ps(WIFI_PS_NONE);
   }
 }
+
 // function to serve our UI
 void serveArduParFormUi() {
   // print a debug message to the serial
@@ -153,3 +168,4 @@ void notFound() {
   }
   server.send(404, "text/plain", message);
 }
+

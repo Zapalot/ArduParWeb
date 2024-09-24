@@ -20,6 +20,6 @@ void WebFormDebugElement::generateHtml(String &outputBuffer)
     outputBuffer += "<br>";
 }
 
-void WebFormDebugElement::reactToRequest(WebServer &server)
+void WebFormDebugElement::reactToRequest(ArduParWebServerClass &server)
 {
 }

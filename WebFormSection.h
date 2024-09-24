@@ -7,7 +7,7 @@ public:
     WebFormSection(const char *title, const char *actionUrl, const char *submitButtonText);
 
     void generateHtml(String &outputBuffer); ///<  Add your own output to the String
-    void reactToRequest(WebServer &server);  ///< react to an incoming request, possibly parsing arguments or URIs
+    void reactToRequest(ArduParWebServerClass &server);  ///< react to an incoming request, possibly parsing arguments or URIs
     std::list<WebFormAbstractUiElement *> uiElements;
     const char *title = 0;
     const char *actionUrl = 0;

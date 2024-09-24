@@ -31,7 +31,7 @@ void WebFormSection::generateHtml(String&  outputBuffer)
     outputBuffer+="</form>\n";
 }
 
-void WebFormSection::reactToRequest(WebServer& server)
+void WebFormSection::reactToRequest(ArduParWebServerClass& server)
 {
     for (auto part : uiElements)
     {

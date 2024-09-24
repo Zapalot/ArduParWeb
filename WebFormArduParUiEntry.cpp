@@ -24,6 +24,15 @@ void WebFormArduParUiEntry::generateHtml(String &outputBuffer)
         outputBuffer += myArduPar->getAddress();
         outputBuffer += R"(">)";
         break;
+    case AbstractArduPar3::ArduPar3TypeBool:
+    {
+        String elementCode=R"(<input type="hidden" name="%checkboxName%" value="%checkboxState%"><input type="checkbox" onclick="this.previousElementSibling.value=1-this.previousElementSibling.value" %checked%>)";
+        elementCode.replace("%checkboxName%",myArduPar->getAddress());
+        elementCode.replace("%checkboxState%",myArduPar->getValueAsBool(0)?"1":"0");
+        elementCode.replace("%checked%",myArduPar->getValueAsBool(0)?"checked":"");
+        outputBuffer+=elementCode;
+    }
+    break;
     default:
         outputBuffer += R"( <input type="text" name=")";
         outputBuffer += myArduPar->getAddress();
@@ -43,7 +52,7 @@ void WebFormArduParUiEntry::generateHtml(String &outputBuffer)
     }
     outputBuffer += "</td>\n";
 }
-void WebFormArduParUiEntry::reactToRequest(WebServer &server)
+void WebFormArduParUiEntry::reactToRequest(ArduParWebServerClass &server)
 {
     // everything that's not a trigger parameter needs a submit button to be pressed in order to update
     if (myArduPar->getType(0) != AbstractArduPar3::ArduPar3TypeTrigger)

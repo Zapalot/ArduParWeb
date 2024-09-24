@@ -1,6 +1,7 @@
 #pragma once
 #include "AbstractArduPar3.h"
 #include "ArduPar3Collection.h"
+#include "ArduParWebHelpers.h"
 #include "WebFormAbstractUiElement.h"
 #include "WebFormSection.h"
 #include "WebFormHtmlPage.h"
@@ -12,9 +13,9 @@
 class WebFormAddressTreeNode: public WebFormAbstractUiElement{
     public:
     WebFormAddressTreeNode(const char* nodeTextBegin,size_t nodeTextLength,const char *actionUrl, const char *submitButtonText, int branchLevel);
-    ~WebFormAddressTreeNode();
+    virtual ~WebFormAddressTreeNode();
     void generateHtml(String &outputBuffer); ///<  Add your own output to the String
-    void reactToRequest(WebServer &server);  ///< react to an incoming request, possibly parsing arguments or URIs
+    void reactToRequest(ArduParWebServerClass &server);  ///< react to an incoming request, possibly parsing arguments or URIs
     char sectionTitleBuffer[WebFormArduParUiBuilderSectionTitleBufferLength];
     const char *actionUrl;
     const char *submitButtonText;
@@ -33,7 +34,7 @@ class WebFormArduParUiBuilder:public WebFormAbstractUiElement{
     WebFormArduParUiBuilder();
     ~WebFormArduParUiBuilder();
     void generateHtml(String &outputBuffer); ///<  Add your own output to the String
-    void reactToRequest(WebServer &server);  ///< react to an incoming request, possibly parsing arguments or URIs
+    void reactToRequest(ArduParWebServerClass &server);  ///< react to an incoming request, possibly parsing arguments or URIs
 
     void buildUi(ArduPar3Collection* collection,const char *actionUrl);
     void addParameter(AbstractArduPar3* par);    ///< create an WebFormArduParUiEntry for that parameter and add it to the collection

@@ -17,7 +17,7 @@ void WebFormArduParUiBuilder::generateHtml(String &outputBuffer)
     htmlPage.generateHtml(outputBuffer);    
 }
 ///< react to an incoming request, possibly parsing arguments or URIs
-void WebFormArduParUiBuilder::reactToRequest(WebServer &server)
+void WebFormArduParUiBuilder::reactToRequest(ArduParWebServerClass &server)
 {
     htmlPage.reactToRequest(server);
 }
@@ -25,7 +25,7 @@ void WebFormArduParUiBuilder::reactToRequest(WebServer &server)
 void WebFormArduParUiBuilder::buildUi(ArduPar3Collection *collection,const char *actionUrl)
 {
     rootNode.actionUrl=actionUrl;
-    for (int i = 0; i < collection->numInstancesRegistered; i++)
+    for (size_t i = 0; i < collection->numInstancesRegistered; i++)
     {
         addParameter(collection->knownInstances[i]);
     }
@@ -107,7 +107,7 @@ void WebFormAddressTreeNode::addEntry(WebFormArduParUiEntry *entry, const char *
 }
 
 ///< react to an incoming request, possibly parsing arguments or URIs
-void WebFormAddressTreeNode::reactToRequest(WebServer &server)
+void WebFormAddressTreeNode::reactToRequest(ArduParWebServerClass &server)
 {
     for (auto curBranch : branches)
         curBranch->reactToRequest(server);
@@ -123,7 +123,7 @@ void WebFormAddressTreeNode::generateHtml(String &outputBuffer)
     if (leafs.size() > 0)
     {
         // start of a form
-        outputBuffer += R"RawLiteral(<form action=")RawLiteral";
+        outputBuffer += R"(<form action=")";
         outputBuffer += actionUrl;
         outputBuffer += "\">\n";
         outputBuffer += "<br>";
@@ -137,7 +137,7 @@ void WebFormAddressTreeNode::generateHtml(String &outputBuffer)
         }
         //end of form
         outputBuffer+="</table>\n<br>";
-        outputBuffer+=R"RawLiteral(<input type="submit" name="___submit___" value=")RawLiteral";
+        outputBuffer+=R"(<input type="submit" name="___submit___" formtarget="invisible_iframe" value=")";
         outputBuffer+=submitButtonText;
         outputBuffer+="\">";
         outputBuffer+="</form>\n";
